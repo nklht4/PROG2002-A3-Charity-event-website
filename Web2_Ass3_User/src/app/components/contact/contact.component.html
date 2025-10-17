@@ -1,0 +1,80 @@
+<div style="height: 60px;"></div>
+
+<div class="contact-container">
+  <div class="contact-header">
+    <h1>Get in Touch</h1>
+    <p>We'd love to hear from you! Whether you have a question about our events, partnerships, or anything else, our
+      team is ready to answer all your questions.</p>
+  </div>
+
+  <div class="contact-content">
+    <div class="contact-info">
+      <div class="info-section">
+        <h3>Address</h3>
+        <p>123 Charity Lane, Hopeville, HP 45678</p>
+      </div>
+
+      <div class="info-section">
+        <h3>Phone</h3>
+        <p>(123) 456-7890</p>
+      </div>
+
+      <div class="info-section">
+        <h3>Email</h3>
+        <!-- Use data binding instead of directly entering the email address -->
+        <p>{{ email }}</p>
+      </div>
+    </div>
+
+    <div class="contact-form-container">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+        <div class="form-group">
+          <label for="userName">Your Name</label>
+          <input type="text" id="userName" formControlName="UserName" placeholder="Enter your full name"
+            [class.error]="submitted && formControls['UserName'].errors">
+          <div *ngIf="submitted && formControls['UserName'].errors" class="error-message">
+            <span *ngIf="formControls['UserName'].errors?.['required']">Name is required</span>
+            <span *ngIf="formControls['UserName'].errors?.['minlength']">Name must be at least 2 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">Your Email</label>
+          <input type="email" id="contactEmail" formControlName="ContactEmail" placeholder="Enter your email address"
+            [class.error]="submitted && formControls['ContactEmail'].errors">
+          <div *ngIf="submitted && formControls['ContactEmail'].errors" class="error-message">
+            <span *ngIf="formControls['ContactEmail'].errors?.['required']">Email is required</span>
+            <span *ngIf="formControls['ContactEmail'].errors?.['email']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="feedBack">Message</label>
+          <textarea id="feedBack" formControlName="FeedBack" rows="6" placeholder="Tell us how we can help you..."
+            [class.error]="submitted && formControls['FeedBack'].errors"></textarea>
+          <div *ngIf="submitted && formControls['FeedBack'].errors" class="error-message">
+            <span *ngIf="formControls['FeedBack'].errors?.['required']">Message is required</span>
+            <span *ngIf="formControls['FeedBack'].errors?.['minlength']">Message must be at least 10 characters</span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Send Message</span>
+          <span *ngIf="isLoading">Sending...</span>
+        </button>
+
+        <!-- Success Message -->
+        <div *ngIf="success" class="success-message">
+          <i class="success-icon">✓</i>
+          Thank you for your message! We'll get back to you soon.
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="error" class="error-message global">
+          <i class="error-icon">⚠</i>
+          Sorry, there was an error sending your message. Please try again later.
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
