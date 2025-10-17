@@ -1,0 +1,14 @@
+<!-- event-card.component.html -->
+<div class="event-card">
+  <!-- Pass the event.EventID parameter -->
+  <img [src]="resolveImageUrl(event.EventImage)" [alt]="event.EventName" (error)="handleImageError($event)">
+  <div class="event-content">
+    <p class="event-date">{{ formatDate(event.EventDate) }}</p>
+    <h3 class="event-title">{{ event.EventName }}</h3>
+    <p class="event-description">{{ truncate(event.Description, 100) }}</p>
+    <div class="event-foot">
+      <span class="tag">{{ event.CategoryName }}</span>
+      <a [routerLink]="['/event', event.EventID]">Details →</a>
+    </div>
+  </div>
+</div>
