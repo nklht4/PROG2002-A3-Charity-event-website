@@ -1,0 +1,109 @@
+<div style="height: 60px;"></div>
+
+<main class="registration-content">
+  <div class="container">
+    <div class="registration-container">
+      <!-- Event Information Section -->
+      <section class="event-info-section" *ngIf="event && !eventLoading">
+        <h1>Register for Event</h1>
+        <div class="event-card">
+          <div class="event-image-container">
+            <img [src]="event.EventImage" [alt]="event.EventName" class="event-image"
+              (error)="handleImageError($event)">
+          </div>
+          <div class="event-details">
+            <h2 class="event-title">{{ event.EventName }}</h2>
+            <p class="event-date">{{ formatDate(event.EventDate) }}</p>
+            <p class="event-location">📍 {{ event.Location }}</p>
+            <p class="event-category">🏷️ {{ event.CategoryName }}</p>
+            <p class="event-description">{{ event.Description }}</p>
+            <div class="event-pricing">
+              <span class="ticket-price">🎫 Ticket Price: {{ getTicketPriceDisplay() }}</span>
+              <span class="attendees">👥 {{ event.CurrentAttendees }} / {{ event.GoalAttendees }} attendees</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading and Error States -->
+      <div *ngIf="eventLoading" class="loading">Loading event information...</div>
+      <div *ngIf="!event && !eventLoading && error" class="error-message">{{ error }}</div>
+
+      <!-- Registration Form Section -->
+      <section class="registration-form-section" *ngIf="event && !eventLoading">
+        <h2>Registration Form</h2>
+
+        <!-- General Error Alert -->
+        <div *ngIf="error" class="error-alert">
+          {{ error }}
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #registrationForm="ngForm" class="registration-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="userName">Full Name *</label>
+              <input type="text" id="userName" name="userName" [(ngModel)]="registrationData.userName"
+                (input)="onFieldChange('userName', registrationData.userName)" required
+                placeholder="Enter your full name (e.g., John Smith)" [class.error]="fieldErrors.userName">
+              <div *ngIf="fieldErrors.userName" class="field-error">
+                {{ fieldErrors.userName }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contactEmail">Email Address *</label>
+              <input type="email" id="contactEmail" name="contactEmail" [(ngModel)]="registrationData.contactEmail"
+                (input)="onFieldChange('contactEmail', registrationData.contactEmail)" required
+                placeholder="Enter your email address (e.g., user@example.com)"
+                [class.error]="fieldErrors.contactEmail">
+              <div *ngIf="fieldErrors.contactEmail" class="field-error">
+                {{ fieldErrors.contactEmail }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="numberOfTickets">Number of Tickets *</label>
+              <input type="number" id="numberOfTickets" name="numberOfTickets"
+                [(ngModel)]="registrationData.numberOfTickets"
+                (input)="onFieldChange('numberOfTickets', registrationData.numberOfTickets.toString())" min="1" max="10"
+                value="1" required [class.error]="fieldErrors.numberOfTickets">
+              <div *ngIf="fieldErrors.numberOfTickets" class="field-error">
+                {{ fieldErrors.numberOfTickets }}
+              </div>
+              <small>Maximum 99 tickets per registration</small>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="order-summary" *ngIf="event">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+              <span>{{ registrationData.numberOfTickets }} x {{ event.EventName }}</span>
+              <span>{{ getTicketPriceDisplay() }}</span>
+            </div>
+            <div class="summary-total">
+              <strong>Total: {{ getTotalPrice() === 0 ? 'Free' : '$' + getTotalPrice() }}</strong>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="goBackToEvent()">
+              ← Back to Event
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="loading || hasFormErrors()">
+              {{ loading ? 'Processing...' : 'Complete Registration' }}
+            </button>
+          </div>
+
+          <div class="form-note">
+            <p>* Required fields</p>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">© 2025 Caleb Hope Charity. All rights reserved.</footer>
