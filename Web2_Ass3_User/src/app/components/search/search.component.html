@@ -1,0 +1,56 @@
+<div style="height: 60px;"></div>
+
+<main class="main-content">
+  <div class="nav-container">
+    <div class="search-layout">
+      <form (ngSubmit)="onSearch()" class="search-filters" #filterForm="ngForm">
+        <div class="filter-header">
+          <h3>Filters</h3>
+          <button type="button" (click)="clearFilters()" class="clear-btn">Clear All</button>
+        </div>
+
+        <div class="filter-group">
+          <label for="category-filter">Category</label>
+          <select id="category-filter" [(ngModel)]="filters.category" name="category" class="filter-select">
+            <option value="">All Categories</option>
+            <option *ngFor="let category of categories" [value]="category.CategoryName">
+              {{ category.CategoryName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="date-filter">Date</label>
+          <input type="date" id="date-filter" [(ngModel)]="filters.date" name="date" class="date-filter-input">
+        </div>
+
+        <div class="filter-group">
+          <label for="location-filter">Location</label>
+          <input type="text" id="location-filter" [(ngModel)]="filters.location" name="location"
+            placeholder="Enter a city or venue">
+        </div>
+
+        <div class="filter-group">
+          <button type="submit" class="apply-btn">Apply Filters</button>
+        </div>
+      </form>
+
+      <div class="search-results" id="search-results-container">
+        <div *ngIf="loading" class="loading">Searching events...</div>
+        <div *ngIf="error" class="error-message">Could not fetch events. Please try again.</div>
+        <div *ngIf="!loading && !error && events.length === 0" class="no-results">
+          No events match your criteria. Try adjusting your filters.
+        </div>
+
+        <div class="events-grid">
+          <app-event-card *ngFor="let event of events" [event]="event">
+          </app-event-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div style="height: 30px;"></div>
+
+<footer class="footer">© 2025 Caleb Hope Charity. All rights reserved.</footer>
