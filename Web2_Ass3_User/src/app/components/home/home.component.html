@@ -1,0 +1,58 @@
+<!-- Boundary line：nav/intro -->
+<hr class="boundary">
+
+<!-- Introduction content -->
+<main class="main-content">
+  <div class="container">
+    <section class="intro">
+      <div class="intro-content">
+        <h1>FIND A<br>CHARITY</h1>
+        <p>Join us, make the world a better place.</p>
+        <a href="#event-list" class="event-list-button">Learn more</a>
+      </div>
+      <div class="intro-image">
+        <img [src]="currentIntroImage" alt="Charity event">
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- Boundary line: intro/event-list -->
+<hr class="boundary">
+
+<section id="event-list">
+  <div class="container">
+    <h2 class="event-list-title">Our Events</h2>
+    <div class="events-container">
+      <div *ngIf="loading" class="loading">Loading events...</div>
+      <div *ngIf="error" class="error-message">Could not load events. Try again!</div>
+      
+      <!-- If the app-event-card is an independent component, make sure that it also processes the image path internally -->
+      <app-event-card 
+        *ngFor="let event of events" 
+        [event]="event">
+      </app-event-card>
+      
+      <!-- If no independent components are used, it can be displayed directly here. -->
+      <!-- 
+      <div *ngFor="let event of events" class="event-card">
+        <div class="event-image">
+          <img [src]="event.EventImage" 
+               [alt]="event.EventName"
+               (error)="handleImageError($event, event)">
+        </div>
+        <div class="event-info">
+          <h3>{{ event.EventName }}</h3>
+          <p>{{ event.Description }}</p>
+        </div>
+      </div>
+      -->
+      
+      <div *ngIf="!loading && !error && events.length === 0" class="no-events">
+        No events found.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">© 2025 Caleb Hope Charity. All rights reserved.</footer>
