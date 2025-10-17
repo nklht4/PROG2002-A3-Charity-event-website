@@ -1,0 +1,18 @@
+<header class="header-nav">
+  <div class="nav-container">
+    <nav>
+      <div class="logo">
+        <a routerLink="/"><img src="assets/img/logo3.png" alt="Charity Logo"></a>
+      </div>
+      <div class="basic-search">
+        <input type="text" #searchInput placeholder="Quick search by keywords...">
+        <button (click)="basicSearch(searchInput.value)">Search</button>
+      </div>
+      <ul class="nav-links">
+        <li><a routerLink="/">HOME</a></li>
+        <li><a routerLink="/search">ADVANCED SEARCH</a></li>
+        <li><a routerLink="/contact">CONTACT US</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
