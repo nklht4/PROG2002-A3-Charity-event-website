@@ -1,0 +1,100 @@
+<div style="height: 30px;"></div>
+
+<main class="event-content" *ngIf="event && !loading">
+  <div class="container">
+    <div class="event-container">
+      <header class="event-header">
+        <div class="event-image">
+          <!-- Use the path of the repaired image -->
+          <img [src]="event.EventImage" [alt]="event.EventName" class="event-main-image"
+            (error)="handleImageError($event)">
+        </div>
+      </header>
+
+      <main class="event-main-content">
+        <div class="event-details">
+          <p id="event-date-header" class="event-date-header">{{ formatDate(event.EventDate) }}</p>
+          <h1 id="event-title">{{ event.EventName }}</h1>
+          <p class="event-subtitle">Hosted by Hope Charity</p>
+
+          <section class="date-time">
+            <h2>Date and Time</h2>
+            <p id="event-date-time">{{ formatDate(event.EventDate) }}</p>
+          </section>
+
+          <section class="location">
+            <h2>Location</h2>
+            <p id="event-location">{{ event.Location }}</p>
+          </section>
+
+          <section class="attendees">
+            <h2>Raising Funds Progress</h2>
+            <p id="attendee-count-display">{{ event.CurrentAttendees }} / {{ event.GoalAttendees }} attendees</p>
+            <p id="Fundraising-has-been-completed">
+              Funds raised: ${{ (event.CurrentAttendees * event.TicketPrice).toFixed(2) }}
+            </p>
+            <div class="progress-bar-container">
+              <div id="attendee-progress-bar" class="progress-bar"
+                [style.width.%]="calculateProgress(event.CurrentAttendees, event.GoalAttendees)"></div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="event-sidebar">
+          <div class="ticket-box">
+            <span id="event-price" class="price">{{ getTicketPrice(event.TicketPrice) }}</span>
+            <button id="get-tickets-btn" class="get-tickets-btn primary-btn" *ngIf="event"
+              [routerLink]="['/registration', event.EventID]">
+              Register Now
+            </button>
+          </div>
+        </aside>
+      </main>
+
+      <section class="about-event">
+        <h2>About this event</h2>
+        <div class="tags"><span id="event-category" class="tag">{{ event.CategoryName }}</span></div>
+        <div class="event-description">
+          <p id="event-description">{{ event.Description }}</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div *ngIf="loading" class="loading">Loading event details...</div>
+<div *ngIf="error" class="error-message">Event not found.</div>
+
+<!-- Registrations Table Section -->
+<section class="registrations-section" *ngIf="event">
+  <div class="container">
+    <div class="registrations-container">
+      <h3>Registrations for this Event ({{ registrations.length }})</h3>
+      <div *ngIf="registrations.length > 0; else noRegistrations">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Tickets</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reg of registrations">
+              <td>{{ reg.UserName }}</td>
+              <td>{{ reg.ContactEmail }}</td>
+              <td>{{ reg.NumberOfTickets }}</td>
+              <td>{{ reg.RegistrationDate | date: 'medium' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-template #noRegistrations>
+        <p>There are no registrations for this event yet.</p>
+      </ng-template>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">© 2025 Hope Charity. All rights reserved.</footer>
