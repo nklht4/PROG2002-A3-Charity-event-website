@@ -1,0 +1,155 @@
+:root {
+    --primary: #000000;
+    --accent: #f86c54;
+    --bg: #ffffff;
+    --text: #000000;
+    --white: #ffffff;
+    --radius: 8px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.boundary {
+    border: none;
+    height: 1px;
+    background: #dfdede;
+    margin: 0;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.header-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    z-index: 1000;
+}
+
+.header-nav nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 0;
+}
+
+.logo img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.basic-search {
+    display: flex;
+    gap: 8px;
+}
+
+.basic-search input {
+    padding: .5rem;
+    border: 3px solid #ccc;
+    border-radius: var(--radius);
+    width: 450px;
+}
+
+.basic-search button {
+    padding: .5rem 1rem;
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+.footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #1E2A3B;
+    color: var(--white);
+    font-size: .9rem;
+    z-index: 100;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    font-size: 1rem;
+    padding: .9rem .9rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+}
+
+.btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--white);
+    padding: 1.1rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background .3s;
+}
+
+.btn:hover {
+    background: orange;
+}

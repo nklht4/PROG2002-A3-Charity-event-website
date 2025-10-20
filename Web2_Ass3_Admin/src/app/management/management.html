@@ -1,0 +1,332 @@
+<!--Left sidebar in Management Page, Use to Control the view of Management Page-->
+<aside class="sidebar">
+    <nav class="sidebar-nav">
+        <ul>
+            <li>
+                <a (click)="setView('dashboard')" [class.active]="currentView === 'dashboard'" title="Dashboard">🏠</a>
+            </li>
+            <li>
+                <a (click)="setView('list')" [class.active]="currentView === 'list'" title="Events List">📋</a>
+            </li>
+            <li>
+                <a (click)="setView('search')" [class.active]="currentView === 'search'" title="Search Events">🔍</a>
+            </li>
+            <li>
+                <a (click)="setView('form')" [class.active]="currentView === 'form'" title="Create/Edit Event">✏️</a>
+            </li>
+            <li>
+                <a (click)="setView('messages')" [class.active]="currentView === 'messages'"
+                    title="Message Board">💬</a>
+            </li>
+            <li>
+                <a (click)="setView('analytics')" [class.active]="currentView === 'analytics'" title="Analytics">📊</a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+<main class="main-content">
+    <!--dashboard: Describe the basic functions of the management page and provide the jump-to methods-->
+    <div *ngIf="currentView === 'dashboard'">
+        <header class="welcome-header">
+            <h1>Hello there, Admin</h1>
+        </header>
+        <section class="action-cards">
+            <a (click)="setView('form')" class="card">
+                <div class="card-icon">✏️</div>
+                <h2>Create New Event</h2>
+                <p>Start from scratch and add all your event details.</p>
+            </a>
+            <a (click)="setView('list')" class="card">
+                <div class="card-icon">⚙️</div>
+                <h2>Manage Existing Events</h2>
+                <p>View, update, or delete events in the system.</p>
+            </a>
+        </section>
+        <section class="action-cards">
+            <a (click)="setView('search')" class="card">
+                <div class="card-icon">🔍</div>
+                <h2>Search Existing Events</h2>
+                <p>Search through the form and the basic search bar.</p>
+            </a>
+            <a (click)="setView('messages')" class="card">
+                <div class="card-icon">💬</div>
+                <h2>Manage Contact Messages</h2>
+                <p>Learn more about user suggestions and questions.</p>
+            </a>
+        </section>
+        <section class="action-cards">
+            <a (click)="setView('analytics')" class="card">
+                <div class="card-icon">📊</div>
+                <h2>Analysis Existing Events</h2>
+                <p>Analyze the current event data.</p>
+            </a>
+        </section>
+    </div>
+
+    <!--Display all the activities and provide an edit and delete button-->
+    <div *ngIf="currentView === 'list'" class="content-section">
+        <div class="list-header">
+            <h2>Events List</h2>
+        </div>
+        <div *ngIf="isLoadingEvents">Loading events...</div>
+        <div class="events-container" *ngIf="!isLoadingEvents && events.length > 0">
+            <div *ngFor="let event of events" class="event-card">
+                <div class="status-badge" [class.inactive]="event.CurrentStatus === 0">
+                    {{ event.CurrentStatus === 1 ? 'Active' : 'Inactive' }}
+                </div>
+                <img [src]="resolveImageUrl(event.EventImage)" [alt]="event.EventName">
+                <div class="event-content">
+                    <p class="event-date">{{ event.EventDate | date: 'longDate' }}</p>
+                    <h3 class="event-title">{{ event.EventName }}</h3>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-edit" (click)="setView('form', event)">Edit</button>
+                    <button class="btn-delete" (click)="onDelete(event.EventID)">Delete</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!isLoadingEvents && events.length === 0">
+            <p>No events found.</p>
+        </div>
+    </div>
+
+    <!--Used for filtering activities through the search and selection table-->
+    <div *ngIf="currentView === 'search'" class="content-section">
+        <div class="list-header">
+            <h2>Search Events</h2>
+        </div>
+
+        <div class="search-layout">
+            <form [formGroup]="searchForm" (ngSubmit)="onSearchSubmit()" class="search-filters">
+                <div class="filter-header">
+                    <h3>Filters</h3>
+                    <button (click)="clearSearchFilters()" type="button" class="clear-btn">Clear All</button>
+                </div>
+                <div class="filter-group">
+                    <label>Keyword</label>
+                    <input type="text" placeholder="Search by name, description..." formControlName="q">
+                </div>
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select class="filter-select" formControlName="category">
+                        <option value="">All Categories</option>
+                        <option *ngFor="let cat of categories" [value]="cat.CategoryName">{{ cat.CategoryName }}
+                        </option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Date</label>
+                    <input type="date" class="date-filter-input" formControlName="date">
+                </div>
+                <div class="filter-group">
+                    <label>Location</label>
+                    <input type="text" placeholder="Enter a city or venue..." formControlName="location">
+                </div>
+                <div class="filter-group">
+                    <button type="submit" class="apply-btn">Apply Filters</button>
+                </div>
+            </form>
+
+            <div class="search-results">
+                <div *ngIf="isSearching">Searching for events...</div>
+
+                <div class="events-container" *ngIf="!isSearching && searchResults.length > 0">
+                    <div *ngFor="let event of searchResults" class="event-card">
+                        <div class="status-badge" [class.inactive]="event.CurrentStatus === 0">
+                            {{ event.CurrentStatus === 1 ? 'Active' : 'Inactive' }}
+                        </div>
+                        <img [src]="resolveImageUrl(event.EventImage)" [alt]="event.EventName">
+                        <div class="event-content">
+                            <p class="event-date">{{ event.EventDate | date: 'longDate' }}</p>
+                            <h3 class="event-title">{{ event.EventName }}</h3>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn-edit" (click)="setView('form', event)">Edit</button>
+                            <button class="btn-delete" (click)="onDelete(event.EventID)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!isSearching && searchResults.length === 0 && searchPerformed">
+                    <p>No events match your criteria.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Used for creating and updating activities-->
+    <div *ngIf="currentView === 'form'" class="create-event-container">
+        <h2 class="form-title">{{ currentEventId ? 'Edit Event' : 'Create New Event' }}</h2>
+        <form [formGroup]="eventForm" (ngSubmit)="onFormSubmit()">
+
+            <div class="form-group">
+                <label for="image-upload" class="image-upload-box"
+                    [style.background-image]="'url(' + imagePreview + ')'">
+                    <div *ngIf="!imagePreview" class="upload-prompt">
+                        <span>⬆️</span>
+                        <p>Upload Event Image</p>
+                    </div>
+                    <input id="image-upload" type="file" (change)="onFileSelected($event)" accept="image/*">
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="eventName">Event Title</label>
+                <input id="eventName" type="text" placeholder="e.g., Annual Charity Gala" formControlName="EventName">
+            </div>
+
+            <div class="inline-form-group">
+                <div class="form-group">
+                    <label for="eventDate">Date & Time</label>
+                    <input id="eventDate" type="datetime-local" formControlName="EventDate">
+                </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input id="location" type="text" placeholder="e.g., Online or Venue Name"
+                        formControlName="Location">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" placeholder="Provide details about the event..."
+                    formControlName="Description" rows="5"></textarea>
+            </div>
+
+            <div class="inline-form-group">
+                <div class="form-group">
+                    <label for="ticketPrice">Ticket Price</label>
+                    <input id="ticketPrice" type="number" placeholder="0.00" formControlName="TicketPrice">
+                </div>
+                <div class="form-group">
+                    <label for="goalAttendees">Goal Attendees</label>
+                    <input id="goalAttendees" type="number" placeholder="150" formControlName="GoalAttendees">
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" formControlName="CategoryID">
+                        <option value="" disabled>-- Select a Category --</option>
+                        <option *ngFor="let cat of categories" [value]="cat.CategoryID">{{ cat.CategoryName }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="currentStatus">Event Status</label>
+                <select id="currentStatus" formControlName="CurrentStatus">
+                    <option [value]="1">Active</option>
+                    <option [value]="0">Inactive / Postponed</option>
+                </select>
+            </div>
+
+            <div class="submit-container">
+                <button type="button" class="btn-cancel" (click)="setView('list')">Cancel</button>
+                <button type="submit" class="btn-save" [disabled]="eventForm.invalid">{{ currentEventId ? 'Save Changes'
+                    :
+                    'Create Event' }}</button>
+            </div>
+        </form>
+
+        <!--A3 Requirement: Show the registration table-->
+        <div *ngIf="currentEventId" class="registrations-section">
+            <h3>Registrations for this Event ({{ registrations.length }})</h3>
+            <div *ngIf="registrations.length > 0; else noRegistrations">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Tickets</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let reg of registrations">
+                            <td>{{ reg.UserName }}</td>
+                            <td>{{ reg.ContactEmail }}</td>
+                            <td>{{ reg.NumberOfTickets }}</td>
+                            <td>{{ reg.RegistrationDate | date: 'medium' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ng-template #noRegistrations>
+                <p>There are no registrations for this event yet.</p>
+            </ng-template>
+        </div>
+    </div>
+
+    <!--display the user contact message and provide the function of delete-->
+    <div *ngIf="currentView === 'messages'" class="content-section">
+        <div class="list-header">
+            <h2>Message Board</h2>
+        </div>
+
+        <div *ngIf="isLoadingMessages">Loading messages...</div>
+
+        <div class="messages-container" *ngIf="!isLoadingMessages && contactMessages.length > 0">
+            <div *ngFor="let msg of contactMessages" class="message-card">
+                <div class="message-header">
+                    <div class="message-user-info">
+                        <strong>{{ msg.UserName }}</strong>
+                        <span>{{ msg.ContactEmail }}</span>
+                    </div>
+                    <div class="message-date">
+                        {{ msg.SubmissionDate | date: 'yyyy-MM-dd HH:mm' }}
+                    </div>
+                </div>
+                <div class="message-body">
+                    <p>{{ msg.FeedBack }}</p>
+                </div>
+                <div class="message-footer">
+                    <button class="btn-delete" (click)="onDeleteContact(msg.ContactID)">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!isLoadingMessages && contactMessages.length === 0">
+            <p>No messages have been received so far.</p>
+        </div>
+    </div>
+
+    <!--Provide simple data analysis-->
+    <section id="analytics" class="content-section" *ngIf="currentView === 'analytics'">
+        <div class="list-header">
+            <h2>Analytics Overview</h2>
+        </div>
+
+        <div *ngIf="analyticsSummary; else loadingAnalytics">
+            <div class="stats-container">
+                <div class="stat-card revenue-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <h3>Total Revenue</h3>
+                        <p class="stat-number">{{ analyticsSummary.totalRevenue | currency:'USD':'symbol':'1.0-0' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Events by Category</h3>
+                <div class="chart-area">
+                    <ul class="chart-list">
+                        <li *ngFor="let category of analyticsSummary.eventsByCategory">
+                            <span class="chart-label">{{ category.CategoryName }}</span>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" [style.width.%]="(category.eventCount / maxCategoryCount) * 100"
+                                    title="{{category.eventCount}} Events">
+                                    <span>{{ category.eventCount }}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #loadingAnalytics>
+            <p>Loading analytics data...</p>
+        </ng-template>
+    </section>
+</main>

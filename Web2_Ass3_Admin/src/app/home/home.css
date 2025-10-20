@@ -1,0 +1,61 @@
+/*Just copy A2 code*/
+.main-content {
+    margin-top: 80px;
+}
+
+.intro {
+    display: flex;
+    align-items: center;
+    padding: 40px 0;
+    min-height: 80vh;
+}
+
+.intro-content {
+    flex: 1;
+    padding-right: 40px;
+}
+
+.intro-content h1 {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 20px 0;
+    color: black;
+}
+
+.intro-content p {
+    font-size: 16px;
+    color: gray;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 400px;
+}
+
+.event-list-button {
+    background: var(--accent);
+    color: var(--white);
+    padding: 15px 35px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.intro-image {
+    flex: 1;
+    text-align: center;
+}
+
+.intro-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+#event-list {
+    padding: 80px 0;
+    background: var(--bg);
+}
